@@ -154,7 +154,7 @@ namespace ai_tests
                 speedEpsilon = Double.Parse(textBox7.Text);
                 angleEpsilon = Math.PI / Double.Parse(textBox8.Text);
             }
-            finally
+            catch(Exception )
             {
             }
         }
