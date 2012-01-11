@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ai_tests", "ai_tests\ai_tests.csproj", "{78C66D4D-5C54-40EC-8AC4-0608B0114DAA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78C66D4D-5C54-40EC-8AC4-0608B0114DAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78C66D4D-5C54-40EC-8AC4-0608B0114DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78C66D4D-5C54-40EC-8AC4-0608B0114DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78C66D4D-5C54-40EC-8AC4-0608B0114DAA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
