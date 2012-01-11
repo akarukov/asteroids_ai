@@ -11,6 +11,7 @@ namespace ai_tests
 {
     public partial class MainForm : Form
     {
+        int scale = 25;
         double maxThrust = 0.5;
         double maxTurn = Math.PI / 16.0;
         int divThrust = 1;
@@ -40,11 +41,11 @@ namespace ai_tests
                 gr.ResetTransform();
                 gr.TranslateTransform(100, panel1.ClientSize.Height / 2);
                 gr.FillRectangle(Brushes.Red,
-                    (int)(xlookfrom * 50), (int)(ylookfrom * 50),
+                    (int)(xlookfrom * scale), (int)(ylookfrom * scale),
                     1, 1);
                 foreach (ShipState ss in foundStates)
                 {
-                    gr.FillRectangle(Brushes.Cyan, (int)(ss.xpos * 50), (int)(ss.ypos * 50), 1, 1);
+                    gr.FillRectangle(Brushes.Cyan, (int)(ss.xpos * scale), (int)(ss.ypos * scale), 1, 1);
                 }
             }
             else
@@ -58,10 +59,10 @@ namespace ai_tests
             gr.ResetTransform();
             gr.TranslateTransform(100, panel1.ClientSize.Height/2);
             Pen pen = new Pen(Color.FromArgb(40, 40, 40));
-            for (int x = -10; x < 20; x++)
+            for (int x = -10; x < 30; x++)
                 for (int y = -10; y < 10; y++)
                 {
-                    gr.DrawRectangle(pen, x * 50, y * 50, 50, 50);
+                    gr.DrawRectangle(pen, x * scale, y * scale, scale, scale);
                 }
         }
         private void cleanLists()
@@ -112,7 +113,7 @@ namespace ai_tests
             //}
             foreach (ShipState ss in all_combinations)
             {
-                gr.FillRectangle(Brushes.White, (int)(ss.xpos * 50), (int)(ss.ypos * 50), 1, 1);
+                gr.FillRectangle(Brushes.White, (int)(ss.xpos * scale), (int)(ss.ypos * scale), 1, 1);
             }
           
             gr.Dispose();
@@ -194,8 +195,8 @@ namespace ai_tests
         }
         private void setLookFrom(Point p)
         {
-            xlookfrom = (p.X-100) / 50.0;
-            ylookfrom = (p.Y - panel1.ClientSize.Height / 2) / 50.0;
+            xlookfrom = (p.X-100.0) / scale;
+            ylookfrom = (p.Y - panel1.ClientSize.Height / 2.0) / scale;
             label15.Text = String.Format("Look from {0:0.00} {0:0.00}", xlookfrom, ylookfrom);
             panel1.Invalidate();
         }
