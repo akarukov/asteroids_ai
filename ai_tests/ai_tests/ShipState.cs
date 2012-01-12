@@ -11,7 +11,7 @@ namespace ai_tests
         public double ypos;
         public double angle;
         public double xspeed;
-        public double yspeed;
+        public double yspeed;        
         static Stack<ShipState> pool = new Stack<ShipState>();
         
         public static ShipState getFromPool()
@@ -30,7 +30,8 @@ namespace ai_tests
             }
         }
         public void putToPool()
-        {
+        {   
+            this.clear();
             pool.Push(this);
         }
         public void clear()

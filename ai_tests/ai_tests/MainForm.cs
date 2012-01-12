@@ -22,14 +22,30 @@ namespace ai_tests
         double angleEpsilon = 0.001;
         double xlookfrom = 0;
         double ylookfrom = 0;
-        
+        List<Color> colors = new List<Color>();
         private Bitmap _backBuffer=null;
-        
+
+        Node<ShipState> rootNode = null;
+        int allNodesNumber = 0;
+        int drawTurn = 1;
+        Brush drawBrush = Brushes.White;
+        Graphics drawGraphics;
         List<ShipState> all_combinations=new List<ShipState>();
         List<ShipState> foundStates = new List<ShipState>();
         public MainForm()
         {
             InitializeComponent();
+            colors.Add(Color.FromArgb(255,255,255));
+            colors.Add(Color.FromArgb(230,240,70));
+            colors.Add(Color.FromArgb(130,230,70));
+            colors.Add(Color.FromArgb(40,190,170));
+            colors.Add(Color.FromArgb(50,110,180));
+            colors.Add(Color.FromArgb(90,70,150));
+            colors.Add(Color.FromArgb(110,60,90));
+            colors.Add(Color.FromArgb(80,60,60));
+            colors.Add(Color.FromArgb(40,60,40));
+            colors.Add(Color.FromArgb(30,20,20));
+            
         }
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
@@ -93,9 +109,13 @@ namespace ai_tests
             prepareGraphics(gr);
             cleanLists();
             DateTime startTime = DateTime.Now;
-            CalcNextShipState(0, ShipState.getFromPool());
+            rootNode = new Node<ShipState>(ShipState.getFromPool());
+            allNodesNumber = 0;
+            CalcAllShipStates(0, rootNode);
             TimeSpan deltaTime = DateTime.Now.Subtract(startTime);
-            int comb_count = all_combinations.Count;
+            //CalcNextShipState(0, ShipState.getFromPool());
+            
+            //int comb_count = all_combinations.Count;
 
             //if(true)
             //{
@@ -111,18 +131,29 @@ namespace ai_tests
             //    }
             //    ssNext.putToPool();
             //}
-            foreach (ShipState ss in all_combinations)
+            //foreach (ShipState ss in all_combinations)
+            //{
+            //    gr.FillRectangle(Brushes.White, (int)(ss.xpos * scale), (int)(ss.ypos * scale), 1, 1);
+            //}
+            drawGraphics = gr;
+
+            for (drawTurn = calcTurn; drawTurn >= 1; drawTurn--)
             {
-                gr.FillRectangle(Brushes.White, (int)(ss.xpos * scale), (int)(ss.ypos * scale), 1, 1);
+                Color color = Color.FromArgb(50, 50, 50);
+                if (drawTurn - 1 < colors.Count)
+                {
+                    color = colors[drawTurn - 1];
+                }
+                drawBrush = new SolidBrush(color);
+                DrawShipsForTurn(0, rootNode);
             }
           
             gr.Dispose();
-            
-            label7.Text = Convert.ToString(comb_count);
+
+            label7.Text = Convert.ToString(allNodesNumber);
             label14.Text = "?";
             label9.Text = Convert.ToString((int)deltaTime.TotalMilliseconds);
         }
-
         private void CalcNextShipState(int turnNumber, ShipState ss)
         {
             if (turnNumber == calcTurn)
@@ -141,6 +172,50 @@ namespace ai_tests
                     CalcNextShipState(turnNumber + 1, newss);
                 }
             newss.putToPool();
+        }
+        private void DrawShipsForTurn(int level,Node<ShipState> parentNode)
+        {
+            if (drawTurn == level+1)
+            {
+                foreach (Node<ShipState> node in parentNode.childrenNodes)
+                {
+                    ShipState ss = node.value;
+                  
+                    drawGraphics.FillRectangle(drawBrush,
+                        (int)(ss.xpos * scale),
+                        (int)(ss.ypos * scale),
+                        1, 1);
+                }
+            }
+            else
+            {
+                foreach (Node<ShipState> node in parentNode.childrenNodes)
+                {
+                    DrawShipsForTurn(level + 1, node);
+                }
+            }
+        }
+        private void CalcAllShipStates(int turnNumber, Node<ShipState> parentNode)
+        {
+            allNodesNumber++;
+            
+            for (int thr = 0; thr <= divThrust; thr++)
+            for (int tur = 0; tur <= divTurn; tur++)
+            {
+                ShipState newss = ShipState.getFromPool();
+                newss.set(parentNode.value);
+                newss.move(thr * maxThrust / divThrust, tur * (2 * maxTurn) / divTurn - maxTurn);
+                Node<ShipState> newnode = new Node<ShipState>(newss, parentNode);
+                if (turnNumber + 1 == calcTurn)
+                {
+                    allNodesNumber++;
+                }
+                else
+                {
+                    CalcAllShipStates(turnNumber + 1, newnode);
+                }
+            }
+
         }
         private void ParseParams()
         {
